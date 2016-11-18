@@ -54,9 +54,9 @@ public class SettingPopUp extends Activity{
             @Override
             public void onClick(View v){
                 SettingModel setting = new SettingModel(playersCnt,goalScore);
-                Bundle bundle = new Bundle();
-                //bundle.putParcelable("settingData", setting);
-                //setResult(Activity.RESULT_OK, new Intent().putExtras("settingData", bundle));
+                Intent intent = new Intent();
+                intent.putExtra("SettingModel",setting);
+                setResult(Activity.RESULT_OK, intent);
                 finish();
             }
         });

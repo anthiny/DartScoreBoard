@@ -11,6 +11,7 @@
     tools:context="com.application.anthony.dartscoreboard.Activities.Main">
 
     <TextView
+        android:id="@+id/testMainText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello World!" />
