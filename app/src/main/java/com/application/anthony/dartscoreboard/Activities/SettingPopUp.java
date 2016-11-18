@@ -1,7 +1,9 @@
 package com.application.anthony.dartscoreboard.Activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +12,8 @@ import android.widget.TextView;
 
 import com.application.anthony.dartscoreboard.Model.SettingModel;
 import com.application.anthony.dartscoreboard.R;
+
+import java.io.Serializable;
 
 /**
  * Created by anthony on 2016. 11. 16..
@@ -50,6 +54,9 @@ public class SettingPopUp extends Activity{
             @Override
             public void onClick(View v){
                 SettingModel setting = new SettingModel(playersCnt,goalScore);
+                Bundle bundle = new Bundle();
+                //bundle.putParcelable("settingData", setting);
+                //setResult(Activity.RESULT_OK, new Intent().putExtras("settingData", bundle));
                 finish();
             }
         });
