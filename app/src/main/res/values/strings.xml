@@ -3,6 +3,7 @@
     <string name="goal_score_text">Goal Score : </string>
     <string name="players">Players : </string>
     <string name="start_button">Start Dart</string>
+    <string name="setting_dialog_title">Settings</string>
     <string name="default_player_count">1</string>
     <string name="goal_scores_prompt">Choose a goal Score</string>
     <string-array name="goal_scores">
