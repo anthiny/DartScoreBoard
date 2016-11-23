@@ -3,38 +3,41 @@ package com.application.anthony.dartscoreboard.Activities;
 import android.app.Dialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.application.anthony.dartscoreboard.Adapter.LazyAdapter;
+import com.application.anthony.dartscoreboard.ListViewItem;
 import com.application.anthony.dartscoreboard.Model.SettingModel;
 import com.application.anthony.dartscoreboard.R;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
 
 public class Main extends AppCompatActivity{
 
     private int goalScore = 0;
-    private int playersCnt = 0;
+    private int playersCnt = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        settingDisplayFacade();
+        setContentView(R.layout.main);
+        popUpDialog();
     }
 
-    public void settingDisplayFacade(){
-        loadSettingPopUp();
-    }
-
-    public void loadSettingPopUp(){
+    public void popUpDialog(){
         Dialog dialog = new Dialog(Main.this);
         dialog.setTitle(getResources().getString(R.string.setting_dialog_title));
         dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.setting_popup);
+        dialog.setContentView(R.layout.setting_dialog);
         settingSpinner(dialog);
         settingButton(dialog);
         settingSeekBar(dialog);
@@ -62,7 +65,7 @@ public class Main extends AppCompatActivity{
                 SettingModel.getInstance().setGoalScore(goalScore);
                 SettingModel.getInstance().setPlayersCnt(playersCnt);
                 dialog.cancel();
-                settingDisplay();
+                makeList();
             }
         });
     }
@@ -98,9 +101,25 @@ public class Main extends AppCompatActivity{
         showPlayersCnt.setText(String.valueOf(currentSetPlayers));
     }
 
-    public void settingDisplay(){
-        String goalScore = String.valueOf(SettingModel.getInstance().getGoalScore());
-        String playerCnt = String.valueOf(SettingModel.getInstance().getPlayersCnt());
-        Toast.makeText(getApplicationContext(), "Goal: "+goalScore+"  Players: "+playerCnt, Toast.LENGTH_LONG).show();
+    public void makeList(){
+        ArrayList<ListViewItem> listViewItems = new ArrayList<>();
+        LazyAdapter lazyAdapter = new LazyAdapter(this, R.layout.list_row,listViewItems);
+
+        ListView listView = (ListView) findViewById(R.id.list);
+        listView.setAdapter(lazyAdapter);
+        ArrayList<String> nickNameList = new ArrayList<>();
+        nickNameList.addAll(Arrays.asList(getResources().getStringArray(R.array.nickNames)));
+
+        Random random = new Random();
+        int maxIdx = nickNameList.size() - 1;
+        for (int i=0; i<SettingModel.getInstance().getPlayersCnt();i++){
+            int rIdx = 0;
+            if (i<4){
+                rIdx = random.nextInt(maxIdx - i);
+            }
+            lazyAdapter.addItem(null, nickNameList.get(rIdx), String.valueOf(SettingModel.getInstance().getGoalScore()));
+            nickNameList.remove(rIdx);
+        }
+
     }
 }
