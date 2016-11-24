@@ -3,6 +3,8 @@
     <string name="goal_score_text">Goal Score : </string>
     <string name="players">Players : </string>
     <string name="start_button">Start Dart</string>
+    <string name="next_round">Next</string>
+    <string name="save_setting">Save settings</string>
     <string name="setting_dialog_title">Settings</string>
     <string name="default_player_count">1</string>
     <string name="goal_scores_prompt">Choose a goal Score</string>
@@ -18,4 +20,5 @@
         <item>Unknown</item>
         <item>Fish</item>
     </string-array>
+    <string name="input_score">Input Your Score!</string>
 </resources>

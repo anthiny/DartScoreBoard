@@ -3,14 +3,16 @@ package com.application.anthony.dartscoreboard.Activities;
 import android.app.Dialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.application.anthony.dartscoreboard.Adapter.LazyAdapter;
 import com.application.anthony.dartscoreboard.ListViewItem;
@@ -25,12 +27,62 @@ public class Main extends AppCompatActivity{
 
     private int goalScore = 0;
     private int playersCnt = 1;
+    private LazyAdapter lazyAdapter = null;
+    private ListView listView = null;
+    private Button button = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        button = (Button)findViewById(R.id.Button);
+        button.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                for (int i=0; i < SettingModel.getInstance().getPlayersCnt(); i++){
+                    getScore(i);
+                }
+            }
+        });
+        button.setVisibility(View.INVISIBLE);
         popUpDialog();
+    }
+
+
+    public void getScore(int index){
+
+        final ListViewItem item = (ListViewItem) lazyAdapter.getItem(index);
+        final int currentScore = Integer.parseInt(item.getGoal());
+        final Dialog dialog = new Dialog(Main.this);
+        dialog.setTitle(getResources().getString(R.string.input_score));
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setContentView(R.layout.input_score_dialog);
+        final EditText editText = (EditText) dialog.findViewById(R.id.scoreInputText);
+
+        editText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER){
+                    int score = Integer.parseInt(editText.getText().toString());
+                    if (score > 200){
+                        Toast.makeText(getBaseContext(),"Impossible Score!",Toast.LENGTH_LONG).show();
+                        return  false;
+                    }
+
+                    if (currentScore < score){
+                        Toast.makeText(getBaseContext(),"Bust!",Toast.LENGTH_LONG).show();
+                    }
+                    else{
+                        item.setGoal(Integer.toString(currentScore - score));
+                        listView.invalidateViews();
+                    }
+                    dialog.dismiss();
+                    return true;
+                }
+                return false;
+            }
+        });
+        dialog.show();
     }
 
     public void popUpDialog(){
@@ -66,6 +118,7 @@ public class Main extends AppCompatActivity{
                 SettingModel.getInstance().setPlayersCnt(playersCnt);
                 dialog.cancel();
                 makeList();
+                button.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -103,9 +156,9 @@ public class Main extends AppCompatActivity{
 
     public void makeList(){
         ArrayList<ListViewItem> listViewItems = new ArrayList<>();
-        LazyAdapter lazyAdapter = new LazyAdapter(this, R.layout.list_row,listViewItems);
+        lazyAdapter = new LazyAdapter(this, R.layout.list_row,listViewItems);
 
-        ListView listView = (ListView) findViewById(R.id.list);
+        listView = (ListView) findViewById(R.id.list);
         listView.setAdapter(lazyAdapter);
         ArrayList<String> nickNameList = new ArrayList<>();
         nickNameList.addAll(Arrays.asList(getResources().getStringArray(R.array.nickNames)));
@@ -114,12 +167,12 @@ public class Main extends AppCompatActivity{
         int maxIdx = nickNameList.size() - 1;
         for (int i=0; i<SettingModel.getInstance().getPlayersCnt();i++){
             int rIdx = 0;
-            if (i<4){
+            if (i<getResources().getInteger(R.integer.seek_bar_max)){
                 rIdx = random.nextInt(maxIdx - i);
             }
             lazyAdapter.addItem(null, nickNameList.get(rIdx), String.valueOf(SettingModel.getInstance().getGoalScore()));
             nickNameList.remove(rIdx);
         }
-
     }
+
 }

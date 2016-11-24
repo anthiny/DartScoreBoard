@@ -13,9 +13,14 @@
     <ListView android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="#b5b5b5"
+        android:divider="@color/colorGray"
         android:dividerHeight="1dp"
         android:listSelector="@color/colorAccent"
         >
     </ListView>
+    <Button android:id="@+id/Button"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/start_button"/>
 </LinearLayout>
