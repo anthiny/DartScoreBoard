@@ -2,6 +2,9 @@ package com.application.anthony.dartscoreboard;
 
 import android.graphics.drawable.Drawable;
 
+import java.text.Collator;
+import java.util.Comparator;
+
 /**
  * Created by anthony on 2016. 11. 23..
  */
@@ -9,7 +12,7 @@ import android.graphics.drawable.Drawable;
 public class ListViewItem {
     private Drawable icon;
     private String nickName;
-    private String goal;
+    private int goal;
 
     public void setIcon(Drawable icon){
         this.icon = icon;
@@ -19,11 +22,11 @@ public class ListViewItem {
         this.nickName = nickName;
     }
 
-    public void setGoal(String goal){
+    public void setGoal(int goal){
         this.goal = goal;
     }
 
-    public String getGoal() {
+    public int getGoal() {
         return goal;
     }
 
@@ -34,4 +37,23 @@ public class ListViewItem {
     public String getNickName() {
         return nickName;
     }
+
+    public static Comparator<ListViewItem> SCORE_COMPARATOR = new Comparator<ListViewItem>() {
+        private final Collator collator = Collator.getInstance();
+        @Override
+        public int compare(ListViewItem o1, ListViewItem o2) {
+            String score1 = String.valueOf(o1.getGoal());
+            String score2 = String.valueOf(o2.getGoal());
+            String tmp1 = "";
+            String tmp2 = "";
+
+            if(o1.getGoal() < 5){
+                tmp1 = tmp1 + "0";
+            }
+            if(o2.getGoal() < 5){
+                tmp2 = tmp2 + "0";
+            }
+            return collator.compare(score1+tmp1, score2+tmp2);
+        }
+    };
 }

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by anthony on 2016. 11. 23..
@@ -57,12 +58,12 @@ public class LazyAdapter extends BaseAdapter {
 
         icon.setImageDrawable(listViewItem.getIcon());
         nick.setText(listViewItem.getNickName());
-        score.setText(listViewItem.getGoal());
+        score.setText(String.valueOf(listViewItem.getGoal()));
 
         return convertView;
     }
 
-    public void addItem(Drawable icon, String nickName, String goal){
+    public void addItem(Drawable icon, String nickName, Integer goal){
         ListViewItem item = new ListViewItem();
 
         item.setIcon(icon);
@@ -71,4 +72,15 @@ public class LazyAdapter extends BaseAdapter {
 
         data.add(item);
     }
+    public void sort(){
+        Collections.sort(data, ListViewItem.SCORE_COMPARATOR);
+        dataChange();
+    }
+
+    public void dataChange(){
+        this.notifyDataSetChanged();
+    }
 }
+
+
+

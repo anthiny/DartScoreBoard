@@ -3,6 +3,7 @@ package com.application.anthony.dartscoreboard.Activities;
 import android.app.Dialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,6 +23,7 @@ import com.application.anthony.dartscoreboard.R;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.Set;
 
 public class Main extends AppCompatActivity{
 
@@ -42,6 +44,7 @@ public class Main extends AppCompatActivity{
                 for (int i=0; i < SettingModel.getInstance().getPlayersCnt(); i++){
                     getScore(i);
                 }
+                lazyAdapter.sort();
             }
         });
         button.setVisibility(View.INVISIBLE);
@@ -52,7 +55,7 @@ public class Main extends AppCompatActivity{
     public void getScore(int index){
 
         final ListViewItem item = (ListViewItem) lazyAdapter.getItem(index);
-        final int currentScore = Integer.parseInt(item.getGoal());
+        final int currentScore = item.getGoal();
         final Dialog dialog = new Dialog(Main.this);
         dialog.setTitle(getResources().getString(R.string.input_score));
         dialog.setCanceledOnTouchOutside(false);
@@ -73,8 +76,7 @@ public class Main extends AppCompatActivity{
                         Toast.makeText(getBaseContext(),"Bust!",Toast.LENGTH_LONG).show();
                     }
                     else{
-                        item.setGoal(Integer.toString(currentScore - score));
-                        listView.invalidateViews();
+                        item.setGoal(currentScore - score);
                     }
                     dialog.dismiss();
                     return true;
@@ -170,7 +172,7 @@ public class Main extends AppCompatActivity{
             if (i<getResources().getInteger(R.integer.seek_bar_max)){
                 rIdx = random.nextInt(maxIdx - i);
             }
-            lazyAdapter.addItem(null, nickNameList.get(rIdx), String.valueOf(SettingModel.getInstance().getGoalScore()));
+            lazyAdapter.addItem(null, nickNameList.get(rIdx), SettingModel.getInstance().getGoalScore());
             nickNameList.remove(rIdx);
         }
     }
